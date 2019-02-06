@@ -15,7 +15,7 @@
 PIPELINES_STORAGE ?= /home/go/go-agent-pipelines
 
 # Set a unique name here
-CONTAINER_HOSTNAME ?= yournamehere-go-agent
+CONTAINER_HOSTNAME ?= delta_qemu
 
 # This is the default location. If you can place it on SSD (~120GB) then
 # that's an even better option - otherwise just leave it.
@@ -25,16 +25,28 @@ YOCTO_CACHE ?= ${PIPELINES_STORAGE}/__yocto_cache
 #  Other settings, normally not changed
 
 IMAGE_NAME ?= genivi/go-agent
-CONTAINER_NAME ?= genivi-go-agent
+CONTAINER_NAME ?= genivi-go-agent-qemu
 
 # This is a special version of the agent - you can ignore it for now.
 CONTAINER_NAME_VBOX ?= go-agent-vbox
-CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox
 
+# This should be a large disk location (host path) where build sandboxes are
+# stored, i.e. all intermediate and final build files!
+# 1. Make sure it exists!
+# 2. Make sure the "go" user inside container can write to it on the host
+# (make it writable by all and then when uid is known you can create
+# limits)
+PIPELINES_STORAGE ?= /home/go/myagent/pipelines
+YOCTO_CACHE ?= ${PIPELINES_STORAGE}/__yocto_cache
+
+IMAGE_NAME ?= genivi/go-agent-test
+CONTAINER_NAME ?= go-agent-test
+CONTAINER_NAME_VBOX ?= go-agent-vbox
+#CONTAINER_HOSTNAME ?= delta-my
 # This is a special version that supports running QEMU in container - for
 # executing automated system tests with QEMU.  Only the run command differs
 CONTAINER_NAME_QEMU ?= go-agent-qemu
-CONTAINER_HOSTNAME_QEMU ?= yournamehere-go-qemu-agent
+CONTAINER_HOSTNAME_QEMU ?= delta_qemu
 
 default:
 	@echo "make [build|build_vbox|run|run_vbox|clean|logs|shell|stop|kill]"

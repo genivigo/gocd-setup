@@ -26,7 +26,7 @@ RUN apt-get update ;\
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
-#ADD dummy /tmp/dummy
+ADD dummy /tmp/dummy
 
 # Fetch script git repo
 RUN git clone http://github.com/genivigo/gocd-setup.git /root/gocd-setup 2>&1 && ls /root/gocd-setup

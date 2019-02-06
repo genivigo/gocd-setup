@@ -2,7 +2,7 @@ CONTAINER_NAME ?= go-server
 IMAGE_NAME ?= genivi/go-server
 
 # External IP / Ports
-GO_SERVER_IP ?= 127.0.0.1
+GO_SERVER_IP ?= 104.218.17.42
 # Port 8153 which is HTTP and therefore normally mapped to 80
 GO_SERVER_PORT_80_8153 ?= 80
 # Port 8154 which is HTTPS and therefore normally mapped to 443
@@ -38,9 +38,11 @@ build:
 
 
 run:
+	mkdir -p "${PIPELINES_STORAGE}" "${ARTIFACT_STORAGE}" \
+	chmod 777 "${PIPELINES_STORAGE}" "${ARTIFACT_STORAGE}" \
 	docker run -d -ti -v ${USERFILE_STORAGE}:/gousers \
-	   -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts \
-	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines \
+	   -v ${ARTIFACT_STORAGE}:/var/lib/go-server/artifacts:z \
+	   -v ${PIPELINES_STORAGE}:/var/lib/go-server/pipelines:z \
 	   --name=${CONTAINER_NAME} -p 8153-8154:8153-8154 \
 	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_80_8153}:8153 \
 	   -p ${GO_SERVER_IP}:${GO_SERVER_PORT_443_8154}:8154 ${IMAGE_NAME}:latest \
