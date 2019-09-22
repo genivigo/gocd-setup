@@ -11,8 +11,8 @@ LAVACLI_DIR="$(echo "$LAVACLI_FILE" | sed 's/.tar.gz//')"
 curl -O -J -L "$LAVACLI_URL"
 tar xf "$LAVACLI_FILE"
 
-sudo apt-get install -y python3-setuptools
-sudo pip3 install --upgrade pip
+sudo apt-get install -y python3-setuptools python3-pip
+sudo pip install --upgrade pip
 sudo pip install pyzmq PyYaml jinja2 setuptools
 
 cd "$LAVACLI_DIR"
