@@ -4,7 +4,7 @@
 # test-jobs into a Lava test infrastructure.
 
 # Update this version as needed...
-LAVACLI_URL=https://files.pythonhosted.org/packages/b1/e4/958e3c2b027e0ff6efbc2f135d893baa848755e486d284bcaf88ac574417/lavacli-0.9.6.tar.gz
+LAVACLI_URL=https://files.pythonhosted.org/packages/82/b3/2de414b62995b1e2084cdd0f3d978c3a4df8dc46e436fa23f9a820c5990b/lavacli-0.9.8.tar.gz
 LAVACLI_FILE="$(basename "$LAVACLI_URL")"
 LAVACLI_DIR="$(echo "$LAVACLI_FILE" | sed 's/.tar.gz//')"
 
