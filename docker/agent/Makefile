@@ -15,7 +15,7 @@
 PIPELINES_STORAGE ?= /home/go/go-agent-pipelines
 
 # Set a unique name here
-CONTAINER_HOSTNAME ?= docssite-agent
+CONTAINER_HOSTNAME ?= android-agent
 
 # This is the default location. If you can place it on SSD (~120GB) then
 # that's an even better option - otherwise just leave it.
@@ -24,8 +24,8 @@ YOCTO_CACHE ?= ${PIPELINES_STORAGE}/__yocto_cache
 # ---------------------------------------------------------------------
 #  Other settings, normally not changed
 
-IMAGE_NAME ?= genivi/go-agent
-CONTAINER_NAME ?= docssite-agent
+IMAGE_NAME ?= genivi/go-agent-1804
+CONTAINER_NAME ?= go-agent-android
 
 # This is a special version of the agent - you can ignore it for now.
 CONTAINER_NAME_VBOX ?= go-agent-vbox
@@ -33,8 +33,8 @@ CONTAINER_HOSTNAME_VBOX ?= go-agent-vbox
 
 # This is a special version that supports running QEMU in container - for
 # executing automated system tests with QEMU.  Only the run command differs
-CONTAINER_NAME_QEMU ?= go-agent-qemu
-CONTAINER_HOSTNAME_QEMU ?= yournamehere-go-qemu-agent
+CONTAINER_NAME_QEMU ?= genivi-builder_qemu
+CONTAINER_HOSTNAME_QEMU ?= genivi-builder_qemu
 
 default:
 	@echo "make [build|build_vbox|run|run_vbox|clean|logs|shell|stop|kill]"
@@ -46,13 +46,13 @@ buildnew:
 	docker build --no-cache --tag=${IMAGE_NAME}:latest .
 
 run:
-	sudo mkdir -p "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
+#	sudo mkdir -p "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	# Make writable, because we don't know the uid of go user.  Better fix this inside of container later.
-	sudo chmod 777 "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
+#	sudo chmod 777 "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	# Uncomment and run the chcon if running Fedora or other selinux enabled system! Otherwise, there's no write access
 	#sudo chcon -Rt svirt_sandbox_file_t "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
-	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /sbin/my_init /bin/bash || true
+	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /bin/bash || true
 
 # QEMU variant -- the image is the same as the standard one, only run
 # command differs

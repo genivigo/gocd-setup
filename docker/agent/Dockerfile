@@ -8,7 +8,8 @@
 # For design comments and rant, see server version instead.
 
 # Baseimage:  Credits: https://github.com/phusion/baseimage-docker/
-FROM phusion/baseimage:latest
+#FROM phusion/baseimage:18.04-1.0.0
+FROM ubuntu:18.04
 
 LABEL maintainer "Gunnar Andersson <gandersson@genivi.org>"
 
@@ -17,12 +18,26 @@ ENV GO_SERVER="go.genivi.org"
 # Location of yocto cache for downloads/sstate inside container
 ENV YOCTO_CACHE=/var/cache/yocto
 
+# Standard fix of TZDATA first because otherwise it tries user-interactive
+# questions during installation.
+RUN apt-get update
+ADD tzdata.sh /tmp/tzdata.sh
+RUN /tmp/tzdata.sh
+
 # Need git to fetch the provisioning script, the rest is done by the script
 # Clean as much as possible before committing keeps the docker image size down.
-RUN apt-get update ;\
-    apt-get install -y git sudo qemu-system-x86 uml-utilities;\
+RUN apt-get install -y git sudo qemu-system-x86 uml-utilities cron
+
+# Standard package list from https://source.android.com/setup/build/initializing#setting-up-a-linux-build-environment
+RUN apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+
+# Renesas required additions, according to documentation
+RUN apt-get install -y python-wand python-crypto liblz4-tool
+
+# Other stuff I found missing in container base image, and/or convenience tools
+RUN apt-get install -y rsync libncurses5-dev wget m4 bc vim-tiny \
     apt-get clean ;\
-    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
+    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* || true
 
 # Touching a dummy file forces cache invalidation so
 # that git-clone is re-run.  Useful during development
@@ -42,7 +57,7 @@ RUN /etc/cron.hourly/go-agent-config-cronjob
 
 # Clean up
 RUN apt-get clean ;\
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* || true
 
 # Fix go-agent settings
 RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
@@ -65,18 +80,20 @@ RUN mkdir -p /var/go/.ssh ;\
 # a user that is allowed to submit jobs on the lava server:
 #CIP_LAVA_LAB_USER=<something>
 #CIP_LAVA_LAB_TOKEN=<something>
-ADD cip_lava_lab_cred /var/go/cip_lava_lab_cred
-RUN chown go /var/go/cip_lava_lab_cred
 
-ADD id_rsa /var/go/.ssh/id_rsa
-ADD id_rsa.pub /var/go/.ssh/id_rsa.pub
-RUN chown -R go /var/go/.ssh/* ;\
-    chmod 400 /var/go/.ssh/id_rsa* ;\
-    chmod 400 /var/go/cip_lava_lab_cred
+# TODO LAGG TILLBAKS DETTA
+#ADD cip_lava_lab_cred /var/go/cip_lava_lab_cred
+#RUN chown go /var/go/cip_lava_lab_cred
+
+#ADD id_rsa /var/go/.ssh/id_rsa
+#ADD id_rsa.pub /var/go/.ssh/id_rsa.pub
+#RUN chown -R go /var/go/.ssh/* ;\
+#    chmod 400 /var/go/.ssh/id_rsa* ;\
+#    chmod 400 /var/go/cip_lava_lab_cred
 
 # Accept host key
-RUN su go -c "echo quit | sftp -i /var/go/.ssh/id_rsa -o StrictHostKeyChecking=no go_artifact_upload@docs.projects.genivi.org" || true
+#RUN su go -c "echo quit | sftp -i /var/go/.ssh/id_rsa -o StrictHostKeyChecking=no go_artifact_upload@docs.projects.genivi.org" || true
 
 # Use baseimage-docker's init system as default command
-CMD ["/sbin/my_init"]
+#CMD ["/sbin/my_init"]
 
