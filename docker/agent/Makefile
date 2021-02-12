@@ -52,7 +52,7 @@ run:
 	# Uncomment and run the chcon if running Fedora or other selinux enabled system! Otherwise, there's no write access
 	#sudo chcon -Rt svirt_sandbox_file_t "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with volumes -- see Makefile)"
-	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest /bin/bash || true
+	docker run -h "${CONTAINER_HOSTNAME}" -d -ti -v "${PIPELINES_STORAGE}:/var/lib/go-agent/pipelines" -v "${YOCTO_CACHE}:/var/cache/yocto" --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest
 
 # QEMU variant -- the image is the same as the standard one, only run
 # command differs
