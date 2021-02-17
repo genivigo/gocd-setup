@@ -44,7 +44,7 @@ RUN apt-get install -y rsync libncurses5-dev wget m4 rsync bc vim-tiny \
 #ADD dummy /tmp/dummy
 
 # Fetch script git repo
-RUN git clone http://github.com/genivigo/gocd-setup.git -b lava_agent /root/gocd-setup 2>&1 && ls /root/gocd-setup
+RUN git clone http://github.com/genivigo/gocd-setup.git -b android_fix /root/gocd-setup 2>&1 && ls /root/gocd-setup
 
 # Run the actual provisioning script -
 RUN cd /root/gocd-setup && ./go-agent-setup.sh

@@ -8,16 +8,20 @@ PACKAGES_RPM="
      asciidoc
      autoconf
      automake
+     bc
+     bison
      boost-devel
      boost-log
      boost-system
      boost-thread
+     build-essential
      bzip2
      ccache
      chrpath
      cmake
      cpio
      cpp
+     cron
      curl
      dbus-c++-devel
      dbus-devel
@@ -28,16 +32,30 @@ PACKAGES_RPM="
      expat-devel
      file
      findutils
+     flex
+     fontconfig
      fuse-devel
+     g++-multilib
      gawk
      gcc
      gcc-c++
+     gcc-multilib
      git
      glibc-devel
+     gnupg
      graphviz
      gzip
      intltool
+     lib32ncurses5-dev
+     lib32z1-dev
+     libc6-dev-i386
+     libgl1-mesa-dev
+     liblz4-tool
+     libncurses5-dev
      libtool
+     libx11-dev
+     libxml2-utils
+     m4
      make
      maven
      patch
@@ -49,20 +67,36 @@ PACKAGES_RPM="
      pkgconfig
      pulseaudio-libs-devel
      python
+     python-crypto
+     python-pip
+     python-wand
      python3
-     python3-pexpect
-     python3-pip
+     python3-crypto
+     python3-wand
+     qemu-system-x86
+     rsync
      socat
      source-highlight
+     sudo
      systemd-devel
      tar
      texinfo
+     uml-utilities
      unzip
+     vim-tiny
      wget
      which
+     x11proto-core-dev
+     xsltproc
      xterm
      xz
+     zip
+     zlib1g-dev
 "
+
+     #python3
+     #python3-pexpect
+     #python3-pip
 
 # Debian/Ubuntu - these are constantly updated by a cronjob in
 # the docker-based agent setup at least.
