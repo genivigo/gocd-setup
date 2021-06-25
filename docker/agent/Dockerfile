@@ -59,10 +59,13 @@ RUN /etc/cron.hourly/go-agent-config-cronjob
 RUN apt-get clean ;\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* || true
 
-# Fix go-agent settings
-RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
-    sed -ie "s!GO_SERVER.*!GO_SERVER_URL=https://${GO_SERVER}:443/go!" /etc/default/go-agent ;\
-    sed -ie 's/export GO_SERVER$/export GO_SERVER_URL/' /etc/default/go-agent
+# Fix go-agent settings -- seems obsolete
+#RUN sed -ie 's/DAEMON=Y/DAEMON=N/' /etc/default/go-agent ;\
+#    sed -ie "s!GO_SERVER.*!GO_SERVER_URL=https://${GO_SERVER}:443/go!" /etc/default/go-agent ;\
+#    sed -ie 's/export GO_SERVER$/export GO_SERVER_URL/' /etc/default/go-agent
+
+# New(?) format configuration file.  This sets the server address now
+ADD wrapper-properties.conf /usr/share/go-agent/wrapper-config/wrapper-properties.conf
 
 # Add service script for "runit" i.e the init/pid 1 used by phusion/baseimage
 # and other needed dirs
@@ -81,7 +84,7 @@ RUN mkdir -p /var/go/.ssh ;\
 #CIP_LAVA_LAB_USER=<something>
 #CIP_LAVA_LAB_TOKEN=<something>
 
-# TODO LAGG TILLBAKS DETTA
+# TODO Add this again?
 #ADD cip_lava_lab_cred /var/go/cip_lava_lab_cred
 #RUN chown go /var/go/cip_lava_lab_cred
 
@@ -94,6 +97,5 @@ RUN mkdir -p /var/go/.ssh ;\
 # Accept host key
 #RUN su go -c "echo quit | sftp -i /var/go/.ssh/id_rsa -o StrictHostKeyChecking=no go_artifact_upload@docs.projects.genivi.org" || true
 
-# Use baseimage-docker's init system as default command
-#CMD ["/sbin/my_init"]
-
+# Start service (and tail-follow devnull to make sure process never exits)
+CMD ["/bin/bash", "-c", "service go-agent start && tail -f /dev/null"]
