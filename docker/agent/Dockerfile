@@ -35,7 +35,7 @@ RUN apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g
 RUN apt-get install -y python-wand python-crypto liblz4-tool
 
 # Other stuff I found missing in container base image, and/or convenience tools
-RUN apt-get install -y rsync libncurses5-dev wget m4 rsync bc vim-tiny \
+RUN apt-get install -y docker.io rsync libncurses5-dev wget m4 bc vim-tiny ;\
     apt-get clean ;\
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* || true
 
