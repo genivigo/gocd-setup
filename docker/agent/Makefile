@@ -46,9 +46,9 @@ buildnew:
 	docker build --no-cache --tag=${IMAGE_NAME}:latest .
 
 run:
-#	sudo mkdir -p "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
+	sudo mkdir -p "${PIPELINES_STORAGE}"
 	# Make writable, because we don't know the uid of go user.  Better fix this inside of container later.
-#	sudo chmod 777 "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
+	sudo chmod 777 "${PIPELINES_STORAGE}"
 	# Uncomment and run the chcon if running Fedora or other selinux enabled system! Otherwise, there's no write access
 	#sudo chcon -Rt svirt_sandbox_file_t "${PIPELINES_STORAGE}" "${YOCTO_CACHE}"
 	@echo "Running:  docker run <hostname setup> -d -ti --name=${CONTAINER_NAME} ${IMAGE_NAME}:latest (with attached volumes -- see Makefile)"
